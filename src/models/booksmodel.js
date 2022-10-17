@@ -1,8 +1,6 @@
 const { parse } = require("csv-parse");
 const fs = require("fs");
 
-const results = [];
-
 function booksWithRatings(books) {
   return (
     books["characters"] !== "[]" &&
@@ -12,6 +10,7 @@ function booksWithRatings(books) {
     books["language"] === "English"
   );
 }
+const results = [];
 
 fs.createReadStream("src/book_data.csv")
   .pipe(
@@ -26,8 +25,19 @@ fs.createReadStream("src/book_data.csv")
   })
   .on("error", (err) => {
     console.log(err);
+    reject(err);
   })
   .on("end", () => {
     const num = results.length;
     console.log(`Found ${num} best selling books`);
   });
+
+function findBook() {
+  return new Promise((resolve, reject) => {
+    resolve(results);
+  });
+}
+
+module.exports = {
+  findBook,
+};
