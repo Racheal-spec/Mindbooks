@@ -2,6 +2,7 @@ const { parse } = require("csv-parse");
 const fs = require("fs");
 const { v4: uuidv4 } = require("uuid");
 const { writeDataToFile } = require("../services");
+const path = require("path");
 
 function booksWithRatings(books) {
   return (
@@ -12,9 +13,10 @@ function booksWithRatings(books) {
     books["language"] === "English"
   );
 }
-const results = [];
+let results = [];
+const csvpath = path.join(__dirname, "data", "book_data.csv");
 
-fs.createReadStream("src/book_data.csv")
+fs.createReadStream(csvpath)
   .pipe(
     parse({
       columns: true,
@@ -51,8 +53,25 @@ function create(book) {
   return new Promise((resolve, reject) => {
     const createNewBook = { bookId: uuidv4(), ...book };
     results.push(createNewBook);
-    writeDataToFile("./book_data.csv", results);
+    writeDataToFile(csvpath, results);
     resolve(createNewBook);
+  });
+}
+
+function update(id, book) {
+  return new Promise((resolve, reject) => {
+    const index = results.findIndex((p) => p.bookId === id);
+    results[index] = { id, ...book };
+    writeDataToFile(csvpath, results);
+    resolve(results[index]);
+  });
+}
+
+function remove(id) {
+  return new Promise((resolve, reject) => {
+    let removedresult = results.filter((p) => p.bookId !== id);
+    writeDataToFile(csvpath, removedresult);
+    resolve();
   });
 }
 
@@ -60,4 +79,6 @@ module.exports = {
   findBook,
   findBookById,
   create,
+  update,
+  remove,
 };
