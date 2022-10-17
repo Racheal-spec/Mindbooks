@@ -1,5 +1,7 @@
 const { parse } = require("csv-parse");
 const fs = require("fs");
+const { v4: uuidv4 } = require("uuid");
+const { writeDataToFile } = require("../services");
 
 function booksWithRatings(books) {
   return (
@@ -45,7 +47,17 @@ function findBookById(id) {
   });
 }
 
+function create(book) {
+  return new Promise((resolve, reject) => {
+    const createNewBook = { bookId: uuidv4(), ...book };
+    results.push(createNewBook);
+    writeDataToFile("./book_data.csv", results);
+    resolve(createNewBook);
+  });
+}
+
 module.exports = {
   findBook,
   findBookById,
+  create,
 };

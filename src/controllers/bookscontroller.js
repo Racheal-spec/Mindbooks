@@ -1,4 +1,5 @@
-const { findBook, findBookById } = require("../models/booksmodel");
+// const { results } = require("../data");
+const { findBook, findBookById, create } = require("../models/booksmodel");
 
 async function getBooks(req, res) {
   try {
@@ -26,7 +27,34 @@ async function getOneBook(req, res, id) {
   }
 }
 
+async function createNewBooks(req, res) {
+  try {
+    let body = "";
+    req.on("data", (chunk) => {
+      body += chunk.toString();
+    });
+    req.on("end", async () => {
+      const { title, series, author, rating, description } = JSON.parse(body);
+      const book = {
+        title,
+        series,
+        author,
+        rating,
+        description,
+      };
+      const newBook = await create(book);
+
+      res.writeHead(201, { "Content-Type": "application/json" });
+
+      return res.end(JSON.stringify(newBook));
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 module.exports = {
   getBooks,
   getOneBook,
+  createNewBooks,
 };
