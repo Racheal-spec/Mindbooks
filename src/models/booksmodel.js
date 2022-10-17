@@ -38,6 +38,14 @@ function findBook() {
   });
 }
 
+function findBookById(id) {
+  return new Promise((resolve, reject) => {
+    const singleResult = results.find((book) => book.bookId === id);
+    resolve(singleResult);
+  });
+}
+
 module.exports = {
   findBook,
+  findBookById,
 };
