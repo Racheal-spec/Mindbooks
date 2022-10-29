@@ -14,12 +14,21 @@ function booksWithRatings(books) {
   );
 }
 let results = [];
-const csvpath = path.join(__dirname, "data", "book_data.csv");
+const csvpath = path.join(__dirname, "data", "books_data.csv");
 
 fs.createReadStream(csvpath)
   .pipe(
     parse({
       columns: true,
+      // comment: "#",
+      // relax_quotes: true,
+      // quote: "'",
+      // delimiter: ",",
+      // ltrim: true,
+      // rtrim: true,
+      // record_delimiter: "\n",
+      // skip_empty_lines: true,
+      // relax_column_count: true,
     })
   )
   .on("data", (data) => {
@@ -29,7 +38,7 @@ fs.createReadStream(csvpath)
   })
   .on("error", (err) => {
     console.log(err);
-    reject(err);
+    // reject(err);
   })
   .on("end", () => {
     const num = results.length;
