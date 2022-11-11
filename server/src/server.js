@@ -35,6 +35,6 @@ const server = http.createServer((req, res) => {
     res.end(JSON.stringify({ message: "Route not found" }));
   }
 });
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => console.log(`server running on port ${PORT}`));
